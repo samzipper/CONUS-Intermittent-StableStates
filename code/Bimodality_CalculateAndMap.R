@@ -45,6 +45,7 @@ ggsave(file.path("plots", "Bimodality_MapMonthlyPrc.png"),
 both_prc_thres <- 0.25
 sf_bi$bimodal <- (sf_bi$prc_lt10 > both_prc_thres) & (sf_bi$prc_gt90 > both_prc_thres)
 
+# map bimodality
 ggplot() +
   geom_polygon(data = states, aes(x = long, y = lat, group = group), fill = NA, color = col.gray) +
   geom_sf(data = sf_bi, aes(color = bimodal)) +
@@ -62,3 +63,9 @@ ggplot(sf_bi, aes(x = drain_sqkm, color = bimodal)) +
                      values = c("FALSE" = col.cat.blu, "TRUE" = col.cat.red))
 ggsave(file.path("plots", "Bimodality_ECDFBimodal.png"),
        width = 120, height = 100, units = "mm")
+
+# save bimodality
+sf_bi |> 
+  st_drop_geometry() |> 
+  dplyr::select(USGS_ID, bimodal) |> 
+  write_csv(file.path("results", "gages_bimodal.csv"))
