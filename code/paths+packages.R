@@ -3,6 +3,7 @@
 
 # load packages
 library(tidyverse)
+library(sf)
 library(patchwork)
 library(dataRetrieval)
 library(lubridate)
