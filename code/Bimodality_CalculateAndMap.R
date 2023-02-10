@@ -6,7 +6,6 @@ source(file.path("code", "paths+packages.R"))
 gage_info <- read_csv(file.path("data", "gage_info.csv"))
 sf_gages <-
   gage_info |> 
-  dplyr::select(gage_ID, region, dec_long_va, dec_lat_va) |> 
   sf::st_as_sf(coords = c("dec_long_va", "dec_lat_va"), crs = 4326) 
 
 # load state map
@@ -54,3 +53,12 @@ ggplot() +
   theme(legend.position = "bottom")
 ggsave(file.path("plots", "Bimodality_MapBimodal.png"),
        width = 150, height = 100, units = "mm")
+
+# plot bimodality distribution as a function of drainage area
+ggplot(sf_bi, aes(x = drain_sqkm, color = bimodal)) +
+  stat_ecdf() +
+  scale_y_continuous(name = "Percent of gages") +
+  scale_color_manual(name = "Bimodal?",
+                     values = c("FALSE" = col.cat.blu, "TRUE" = col.cat.red))
+ggsave(file.path("plots", "Bimodality_ECDFBimodal.png"),
+       width = 120, height = 100, units = "mm")
